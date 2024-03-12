@@ -1,6 +1,7 @@
 package com.mysite.sbb;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -102,5 +103,13 @@ class SbbApplicationTests {
 		a.setQuestion(q);
 		a.setCreateDate(LocalDateTime.now());
 		this.answerRepository.save(a);
+	}
+
+	@Test
+	void findAnswerTest() {
+		Optional<Answer> oa = this.answerRepository.findById(1);
+		assertTrue(oa.isPresent());
+		Answer a = oa.get();
+		assertEquals(4, a.getQuestion().getId());
 	}
 }
