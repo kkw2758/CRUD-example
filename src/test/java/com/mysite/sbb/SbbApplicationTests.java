@@ -1,5 +1,6 @@
 package com.mysite.sbb;
 
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,5 +112,19 @@ class SbbApplicationTests {
 		assertTrue(oa.isPresent());
 		Answer a = oa.get();
 		assertEquals(4, a.getQuestion().getId());
+	}
+
+	@Test
+	@Transactional
+	void findQuestionByAnswer() {
+		Optional<Question> oq = this.questionRepository.findById(4);
+
+		assertTrue(oq.isPresent());
+		Question q = oq.get();
+
+		List<Answer> answerList = q.getAnswerList();
+
+		assertEquals(1, answerList.size());
+		assertEquals("네 자동으로 생성됩니다.", answerList.get(0).getContent());
 	}
 }
