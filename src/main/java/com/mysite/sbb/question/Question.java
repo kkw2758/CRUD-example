@@ -9,9 +9,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
+
 @Getter
-@Setter
 @Entity
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Question {
     @Id
@@ -53,4 +55,18 @@ public class Question {
         this.content = content;
         this.modifyDate = LocalDateTime.now();
     }
+
+    public QuestionDto toDto() {
+        return QuestionDto.builder()
+                .id(id)
+                .subject(subject)
+                .content(content)
+                .createDate(createDate)
+                .answerList(answerList)
+                .author(author)
+                .modifyDate(modifyDate)
+                .voter(voter)
+                .build();
+    }
 }
+

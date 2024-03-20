@@ -6,7 +6,6 @@ import com.mysite.sbb.question.QuestionDto;
 import com.mysite.sbb.question.QuestionRepository;
 import com.mysite.sbb.question.QuestionService;
 import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -28,9 +27,6 @@ class SbbApplicationTests {
 
 	@Autowired
 	private AnswerRepository answerRepository;
-
-    @Autowired
-    private ModelMapper modelMapper;
 
 //	@Test
 //	void contextLoads() {
@@ -146,19 +142,4 @@ class SbbApplicationTests {
 //			this.questionService.create(subject, content, null);
 //		}
 //	}
-
-    @Test
-    void questionObjectMappingTest() {
-        QuestionDto questionDto = new QuestionDto();
-        questionDto.setId(1);
-        questionDto.setSubject("subject");
-        questionDto.setContent("content");
-        questionDto.setCreateDate(LocalDateTime.now());
-        questionDto.setModifyDate(LocalDateTime.now());
-
-        Question question = modelMapper.map(questionDto, Question.class);
-        System.out.println(question);
-        System.out.println(question.getId());
-        System.out.println(question.getCreateDate());
-    }
 }

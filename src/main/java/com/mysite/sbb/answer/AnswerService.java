@@ -1,11 +1,9 @@
 package com.mysite.sbb.answer;
 
 import com.mysite.sbb.DataNotFoundException;
-import com.mysite.sbb.question.Question;
 import com.mysite.sbb.question.QuestionDto;
 import com.mysite.sbb.user.SiteUser;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,13 +14,12 @@ import java.util.Optional;
 public class AnswerService {
 
     private final AnswerRepository answerRepository;
-    private final ModelMapper modelMapper;
 
     public Answer create(QuestionDto questionDto, String content, SiteUser author) {
         Answer answer = new Answer();
         answer.setContent(content);
         answer.setCreateDate(LocalDateTime.now());
-        answer.setQuestion(modelMapper.map(questionDto, Question.class));
+        answer.setQuestion(questionDto.toEntity());
         answer.setAuthor(author);
         this.answerRepository.save(answer);
         return answer;

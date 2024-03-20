@@ -2,6 +2,7 @@ package com.mysite.sbb.question;
 
 import com.mysite.sbb.answer.Answer;
 import com.mysite.sbb.user.SiteUser;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +12,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+@Builder
 public class QuestionDto {
     private Integer id;
 
@@ -28,6 +30,16 @@ public class QuestionDto {
 
     Set<SiteUser> voter;
 
-    public QuestionDto() {
+    public Question toEntity() {
+        return Question.builder()
+                .id(id)
+                .subject(subject)
+                .content(content)
+                .createDate(createDate)
+                .answerList(answerList)
+                .author(author)
+                .modifyDate(modifyDate)
+                .voter(voter)
+                .build();
     }
 }

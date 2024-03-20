@@ -10,7 +10,6 @@ import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -24,29 +23,19 @@ import java.util.Optional;
 public class QuestionService {
 
     private final QuestionRepository questionRepository;
-    private final ModelMapper modelMapper;
 
     public Page<QuestionDto> getList(int page, String kw) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createDate"));
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         Page<Question> resultPage = this.questionRepository.findAll(search(kw), pageable);
-        Question question = resultPage.getContent().get(0);
-        QuestionDto result = modelMapper.map(question, QuestionDto.class);// Error
-        System.out.println(result);
-        QuestionDto questionDto = convertToDto(question); // 에러 발생
-        Page<QuestionDto> questionDtoPage = resultPage.map(this::convertToDto);
-        return questionDtoPage;
-    }
-
-    private QuestionDto convertToDto(Question question) {
-        return modelMapper.map(question, QuestionDto.class);
+        return resultPage.map(Question::toDto);
     }
 
     public QuestionDto getQuestion(Integer id) {
         Optional<Question> question = this.questionRepository.findById(id);
         if (question.isPresent()) {
-            return convertToDto(question.get());
+            return question.get().toDto();
         } else {
             throw new DataNotFoundException("question not found");
         }
@@ -72,7 +61,7 @@ public class QuestionService {
     }
 
     public void vote(QuestionDto questionDto, SiteUser siteUser) {
-        Question question = modelMapper.map(questionDto, Question.class);
+        Question question = questionDto.toEntity();
         System.out.println("question = " + question);
         question.getVoter().add(siteUser);
         this.questionRepository.save(question);
