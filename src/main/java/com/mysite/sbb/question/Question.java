@@ -39,20 +39,20 @@ public class Question {
     @ManyToMany
     Set<SiteUser> voter;
 
-    private Question(String subject, String content, SiteUser author) {
-        this.subject = subject;
-        this.content = content;
+    private Question(QuestionForm questionForm, SiteUser author) {
+        this.subject = questionForm.getSubject();
+        this.content = questionForm.getContent();
         this.author = author;
         this.createDate = LocalDateTime.now();
     }
 
-    public static Question of(String subject, String content, SiteUser author) {
-        return new Question(subject, content, author);
+    public static Question of(QuestionForm questionForm, SiteUser author) {
+        return new Question(questionForm, author);
     }
 
-    public void updateQuestion(String subject, String content){
-        this.subject = subject;
-        this.content = content;
+    public void updateQuestion(QuestionForm questionForm){
+        this.subject = questionForm.getSubject();
+        this.content = questionForm.getContent();
         this.modifyDate = LocalDateTime.now();
     }
 

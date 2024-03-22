@@ -54,7 +54,7 @@ public class QuestionController {
             return "question_form";
         }
         SiteUser siteUser = userService.getUser(principal.getName());
-        this.questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUser);
+        this.questionService.create(questionForm, siteUser);
         return "redirect:/question/list";
     }
 
@@ -80,7 +80,7 @@ public class QuestionController {
         if (!question.getAuthor().getUserName().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
-        this.questionService.modify(id, questionForm.getSubject(), questionForm.getContent());
+        this.questionService.modify(id, questionForm);
         return String.format("redirect:/question/detail/%s", id);
     }
 
@@ -97,10 +97,9 @@ public class QuestionController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/vote/{id}")
-    public String questionVote(Principal principal, @PathVariable("id") Integer id) {
-        QuestionDto question = this.questionService.getQuestion(id);
+    public String questionVote(Principal principal, @PathVariable("id") Integer questionId) {
         SiteUser siteUser = this.userService.getUser(principal.getName());
-        this.questionService.vote(question, siteUser);
-        return String.format("redirect:/question/detail/%s", id);
+        this.questionService.vote(questionId, siteUser);
+        return String.format("redirect:/question/detail/%s", questionId);
     }
 }

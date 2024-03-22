@@ -33,36 +33,35 @@ public class QuestionService {
     }
 
     public QuestionDto getQuestion(Integer id) {
-        Optional<Question> question = this.questionRepository.findById(id);
-        if (question.isPresent()) {
-            return question.get().toDto();
-        } else {
-            throw new DataNotFoundException("question not found");
-        }
+        Question question = getQuestionEntity(id);
+        return question.toDto();
     }
 
-    public void create(String subject, String content, SiteUser author) {
-        Question q = Question.of(subject, content, author);
+    private Question getQuestionEntity(Integer id) {
+        Optional<Question> question = this.questionRepository.findById(id);
+        if (question.isPresent()) {
+            return question.get();
+        }
+        throw new DataNotFoundException("question not found");
+    }
+
+    public void create(QuestionForm questionForm, SiteUser author) {
+        Question q = Question.of(questionForm, author);
         this.questionRepository.save(q);
     }
 
-    public void modify(Integer id, String subject, String content) {
-        Optional<Question> question = this.questionRepository.findById(id);
-        if (question.isPresent()) {
-            question.get().updateQuestion(subject, content);
-            this.questionRepository.save(question.get());
-        } else {
-            throw new DataNotFoundException("question not found");
-        }
+    public void modify(Integer id, QuestionForm questionForm) {
+        Question question = getQuestionEntity(id);
+        question.updateQuestion(questionForm);
+        this.questionRepository.save(question);
     }
 
     public void delete(Integer id) {
         this.questionRepository.deleteById(id);
     }
 
-    public void vote(QuestionDto questionDto, SiteUser siteUser) {
-        Question question = questionDto.toEntity();
-        System.out.println("question = " + question);
+    public void vote(Integer id, SiteUser siteUser) {
+        Question question = getQuestionEntity(id);
         question.getVoter().add(siteUser);
         this.questionRepository.save(question);
     }
