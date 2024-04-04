@@ -68,5 +68,18 @@ public class Question {
                 .voter(voter)
                 .build();
     }
-}
 
+    public QuestionListDto toQuestionListDto() {
+        QuestionListDto.QuestionListDtoBuilder builder = QuestionListDto.builder()
+                .id(id)
+                .subject(subject)
+                .createDate(createDate)
+                .answerCount(answerList.size());
+
+        if (author != null) {
+            builder.author(author.getUserName());
+        }
+
+        return builder.build();
+    }
+}

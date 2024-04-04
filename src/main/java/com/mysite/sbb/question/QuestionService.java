@@ -24,12 +24,12 @@ public class QuestionService {
 
     private final QuestionRepository questionRepository;
 
-    public Page<QuestionDto> getList(int page, String kw) {
+    public Page<QuestionListDto> getList(int page, String kw) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("createDate"));
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         Page<Question> resultPage = this.questionRepository.findAll(search(kw), pageable);
-        return resultPage.map(Question::toDto);
+        return resultPage.map(Question::toQuestionListDto);
     }
 
     public QuestionDto getQuestion(Integer id) {
